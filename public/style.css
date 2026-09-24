@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+:root {
+    --bg: #080d12;
+    --panel: rgba(18, 27, 35, .88);
+    --line: rgba(173, 195, 211, .16);
+    --text: #eef5f7;
+    --muted: #91a4ae;
+    --red: #ef4f57;
+    --red-dark: #a51f31;
+    --cyan: #63d7d2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    padding: 28px 18px;
+    color: var(--text);
+    background: radial-gradient(circle at 50% 34%, #1a2931 0, var(--bg) 48%, #050709 100%);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.container { width: min(100%, 480px); text-align: center; }
+.cabecalho { margin-bottom: 30px; }
+.sinalizador { display: inline-block; width: 9px; height: 9px; margin-bottom: 15px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 16px var(--cyan); }
+.eyebrow { margin: 0 0 8px; color: var(--cyan); font: 700 11px/1.2 Consolas, monospace; letter-spacing: .18em; }
+h1 { margin: 0; font-size: clamp(26px, 7vw, 38px); line-height: 1.05; letter-spacing: 0; }
+.subtitulo { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+.painel-acionamento { padding: 27px 20px 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: 0 20px 60px rgba(0, 0, 0, .28); }
+
+#btnEmergencia {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(68vw, 274px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    padding: 24px;
+    overflow: hidden;
+    border: 10px solid #202d36;
+    border-radius: 50%;
+    color: white;
+    background: radial-gradient(circle at 35% 28%, #fb6a6b, var(--red) 47%, var(--red-dark) 100%);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 0 40px rgba(239, 79, 87, .3), inset 0 3px 12px rgba(255, 255, 255, .3), inset 0 -14px 20px rgba(89, 0, 16, .32);
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+
+#btnEmergencia::before { content: ""; position: absolute; inset: 12px; border: 1px solid rgba(255, 255, 255, .22); border-radius: inherit; }
+.icone-alerta { position: relative; font: 700 54px/1 Georgia, serif; }
+.texto-botao { position: relative; display: block; margin-top: -5px; font-size: 13px; font-weight: 700; letter-spacing: .08em; }
+#btnEmergencia:hover { filter: brightness(1.08); transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 0 54px rgba(239, 79, 87, .5), inset 0 3px 12px rgba(255, 255, 255, .3); }
+#btnEmergencia:active { transform: scale(.97); }
+#btnEmergencia.enviando { cursor: wait; animation: respirar 1s ease-in-out infinite; }
+#btnEmergencia:disabled { cursor: wait; }
+@keyframes respirar { 50% { filter: brightness(1.18); } }
+
+.instrucao { min-height: 18px; margin: 20px 0 0; color: var(--muted); font-size: 12px; }
+.status-box { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 60px; margin-top: 15px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.status-ponto { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+#status { margin: 0; color: var(--muted); font-size: 13px; }
+.status-box[data-tipo="alerta"] .status-ponto { background: #f5c75c; box-shadow: 0 0 10px #f5c75c; }
+.status-box[data-tipo="erro"] .status-ponto { background: var(--red); box-shadow: 0 0 10px var(--red); }
+.status-box[data-tipo="sucesso"] .status-ponto { background: #6ee7a0; box-shadow: 0 0 10px #6ee7a0; }
+.rodape { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 22px; color: #6f828c; font-size: 11px; }
+.cadeado { color: var(--cyan); font-size: 9px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+@media (max-width: 380px) { body { padding: 20px 12px; } .painel-acionamento { padding-inline: 10px; } }
+

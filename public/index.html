@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acionamento de emergência</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="cabecalho">
+            <span class="sinalizador" aria-hidden="true"></span>
+            <p class="eyebrow">CANAL PRIORITÁRIO</p>
+            <h1>Acionamento de emergência</h1>
+            <p class="subtitulo">Central de resposta conectada</p>
+        </header>
+
+        <section class="painel-acionamento" aria-label="Acionador de emergência">
+            <button id="btnEmergencia" type="button" aria-label="Toque para enviar um alerta de emergência" aria-describedby="instrucao status">
+                <span class="icone-alerta" aria-hidden="true">!</span>
+                <span class="texto-botao">TOQUE PARA ALERTAR</span>
+            </button>
+            <p id="instrucao" class="instrucao">Um toque envia o alerta imediatamente</p>
+        </section>
+
+        <div class="status-box" aria-live="polite">
+            <span class="status-ponto" aria-hidden="true"></span>
+            <p id="status" role="status">Pronto para receber um acionamento</p>
+        </div>
+
+        <footer class="rodape">
+            <span class="cadeado" aria-hidden="true">●</span>
+            <span>Seu alerta será encaminhado imediatamente</span>
+        </footer>
+    </main>
+
+    <script src="client.js"></script>
+</body>
+</html>
