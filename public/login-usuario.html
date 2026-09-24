@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Denúncias</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    
+    <!-- TELA DE LOGIN -->
+    <div id="login-card" class="card">
+      <h2>Acessar Conta</h2>
+      <form id="form-login">
+        <div class="input-group">
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" required placeholder="seu@email.com">
+        </div>
+        <div class="input-group">
+          <label for="login-senha">Senha</label>
+          <input type="password" id="login-senha" required placeholder="******">
+        </div>
+        <button type="submit" class="btn-primary">Entrar</button>
+      </form>
+      <p class="switch-form">Ainda não tem conta? <a href="#" id="go-to-register">Cadastre-se</a></p>
+    </div>
+
+    <!-- TELA DE CADASTRO -->
+    <div id="register-card" class="card hidden">
+      <h2>Cadastro do Usuário</h2>
+      <form id="form-register">
+        <div class="input-group">
+          <label for="reg-nome">Nome Completo</label>
+          <input type="text" id="reg-nome" placeholder="Seu nome" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="reg-cpf">CPF</label>
+          <input type="text" id="reg-cpf" placeholder="000.000.000-00" required>
+        </div>
+
+        <div class="input-group">
+          <label for="reg-email">E-mail</label>
+          <input type="email" id="reg-email" placeholder="seu@email.com" required>
+        </div>
+
+        <div class="input-group">
+          <label for="reg-telefone">Telefone / WhatsApp</label>
+          <input type="tel" id="reg-telefone" placeholder="(11) 99999-9999" required>
+        </div>
+
+        <div class="input-group">
+          <label for="reg-senha">Senha</label>
+          <input type="password" id="reg-senha" placeholder="******" required>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="reg-anonimo">
+          <label for="reg-anonimo">Desejo manter meu perfil como anônimo por padrão nas denúncias</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Criar Conta</button>
+      </form>
+      <p class="switch-form">Já possui conta? <a href="#" id="go-to-login">Fazer Login</a></p>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
