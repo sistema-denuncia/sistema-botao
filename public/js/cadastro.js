@@ -37,26 +37,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (cadastroForm) {
-    cadastroForm.addEventListener('submit', (e) => {
+    cadastroForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const nome = document.getElementById('nomeCompleto').value.trim();
+      const cpf = cpfInput.value;
+      const dataNascimento = hiddenDatePicker.value;
       const email = document.getElementById('email').value;
       const confirmarEmail = document.getElementById('confirmarEmail').value;
       const senha = document.getElementById('senha').value;
       const confirmarSenha = document.getElementById('confirmarSenha').value;
+      const mensagem = document.getElementById('mensagemCadastro');
+      const botao = cadastroForm.querySelector('[type="submit"]');
 
       if (email !== confirmarEmail) {
-        alert('Os e-mails digitados não coincidem!');
+        mensagem.textContent = 'Os e-mails digitados não coincidem.';
         return;
       }
 
       if (senha !== confirmarSenha) {
-        alert('As senhas digitadas não coincidem!');
+        mensagem.textContent = 'As senhas digitadas não coincidem.';
         return;
       }
 
-      alert('Cadastro efetuado com sucesso!');
-      window.location.href = '/';
+      if (!dataNascimento) {
+        mensagem.textContent = 'Selecione sua data de nascimento.';
+        return;
+      }
+
+      botao.disabled = true;
+      mensagem.textContent = 'Salvando cadastro...';
+      try {
+        const resposta = await fetch('/api/auth/cadastro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, cpf, dataNascimento, email, senha }),
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.mensagem || `Falha no cadastro (HTTP ${resposta.status}).`);
+        }
+
+        mensagem.textContent = 'Cadastro realizado. Redirecionando para o login...';
+        window.setTimeout(() => { window.location.href = '/login'; }, 1200);
+      } catch (erro) {
+        mensagem.textContent = erro.message || 'Não foi possível concluir o cadastro.';
+      } finally {
+        botao.disabled = false;
+      }
     });
   }
 });
