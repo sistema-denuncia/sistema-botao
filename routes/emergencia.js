@@ -1,16 +1,8 @@
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const http = require('http');
 const https = require('https');
 
 const router = express.Router();
-
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: Number(process.env.EMERGENCIA_RATE_LIMIT || 10),
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
 function encaminharParaPolicia(body) {
   return new Promise((resolve, reject) => {
@@ -52,7 +44,7 @@ function encaminharParaPolicia(body) {
   });
 }
 
-router.post('/', limiter, async (req, res) => {
+router.post('/', async (req, res) => {
   const { clienteId, tipo, prioridade, dispositivo, localizacao } = req.body;
 
   if (!clienteId) {
