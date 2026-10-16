@@ -1,41 +1,80 @@
-// Alternar entre as telas
-const loginCard = document.getElementById('login-card');
-const registerCard = document.getElementById('register-card');
+const loginMessage = document.getElementById('login-message');
+const agentLoginMessage = document.getElementById('agent-login-message');
+const registerMessage = document.getElementById('register-message');
+const loginForms = document.querySelectorAll('#form-login, #form-agent-login');
+const registerForm = document.getElementById('form-register');
 
-document.getElementById('go-to-register').addEventListener('click', (e) => {
+loginForms.forEach((loginForm) => loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  loginCard.classList.add('hidden');
-  registerCard.classList.remove('hidden');
-});
+  const form = e.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const message = form.id === 'form-agent-login' ? agentLoginMessage : loginMessage;
+  message.textContent = '';
+  button.disabled = true;
 
-document.getElementById('go-to-login').addEventListener('click', (e) => {
+  try {
+    const loginPath = form.id === 'form-agent-login'
+      ? '/api/usuarios/login/agente'
+      : '/api/usuarios/login/administrador';
+    const response = await window.apiFetch(loginPath, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        usuario: form.elements.usuario.value,
+        senha: form.elements.senha.value,
+      }),
+    });
+    const result = await response.json();
+    message.textContent = response.ok
+      ? 'Login realizado com sucesso.'
+      : result.erro || 'Não foi possível validar o acesso.';
+    message.classList.toggle('success', response.ok);
+    if (response.ok && form.id !== 'form-agent-login' && result.usuario.cargo === 'ADMINISTRADOR') {
+      window.location.assign('tela-adm-opcoes.html');
+    }
+  } catch {
+    message.textContent = 'Não foi possível conectar ao servidor.';
+    message.classList.remove('success');
+  } finally {
+    button.disabled = false;
+  }
+}));
+
+if (registerForm) registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  registerCard.classList.add('hidden');
-  loginCard.classList.remove('hidden');
-});
+  const form = e.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  registerMessage.textContent = '';
 
-// Captura de dados do formulário de Login
-document.getElementById('form-login').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value;
-  const senha = document.getElementById('login-senha').value;
+  const senha = form.elements.senha.value;
+  if (senha.length < 6 || senha.length > 128 || !/[\p{Lu}]/u.test(senha) || !/[^\p{L}\p{N}\s]/u.test(senha)) {
+    registerMessage.textContent = 'A senha precisa ter de 6 a 128 caracteres, uma letra maiúscula e um caractere especial.';
+    registerMessage.classList.remove('success');
+    form.elements.senha.focus();
+    return;
+  }
 
-  console.log('Dados de Login:', { email, senha });
-  alert('Login efetuado! (Integre com o back-end)');
-});
+  button.disabled = true;
 
-// Captura de dados do formulário de Cadastro
-document.getElementById('form-register').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const dadosCadastro = {
-    nome: document.getElementById('reg-nome').value,
-    cpf: document.getElementById('reg-cpf').value,
-    email: document.getElementById('reg-email').value,
-    telefone: document.getElementById('reg-telefone').value,
-    senha: document.getElementById('reg-senha').value,
-    preferenciaAnonima: document.getElementById('reg-anonimo').checked
-  };
-
-  console.log('Dados do Cadastro:', dadosCadastro);
-  alert('Cadastro realizado com sucesso!');
+  try {
+    const response = await window.apiFetch('/api/usuarios/cadastro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome: form.elements.nome.value,
+        usuario: form.elements.usuario.value,
+        cargo: form.elements.cargo.value,
+        senha,
+      }),
+    });
+    const result = await response.json();
+    registerMessage.textContent = result.mensagem || result.erro || 'Não foi possível cadastrar o usuário.';
+    registerMessage.classList.toggle('success', response.ok);
+    if (response.ok) form.reset();
+  } catch {
+    registerMessage.textContent = 'Não foi possível conectar ao servidor.';
+    registerMessage.classList.remove('success');
+  } finally {
+    button.disabled = false;
+  }
 });

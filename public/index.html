@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
     <title>Acionamento de emergência</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,12 +17,16 @@
             <p id="usuarioLogado" class="subtitulo" aria-live="polite"></p>
         </header>
 
-        <section class="painel-acionamento" aria-label="Acionador de emergência">
-            <button id="btnEmergencia" type="button" aria-label="Toque para enviar um alerta de emergência" aria-describedby="instrucao status">
+        <section class="painel-acionamento" aria-label="Acionamento de emergência">
+            <button id="btnEmergencia" type="button" aria-describedby="instrucao status">
                 <span class="icone-alerta" aria-hidden="true">!</span>
                 <span class="texto-botao">TOQUE PARA ALERTAR</span>
             </button>
-            <p id="instrucao" class="instrucao">Um toque envia o alerta imediatamente</p>
+            <p class="instrucao" id="instrucao">O alerta será enviado com a localização disponível.</p>
+            <div class="status-box" data-tipo="" aria-live="polite">
+                <span class="status-ponto" aria-hidden="true"></span>
+                <p id="status">Aguardando acionamento.</p>
+            </div>
         </section>
 
         <div class="status-box" aria-live="polite">
@@ -36,6 +41,10 @@
         </footer>
     </main>
 
-    <script src="/js/client.js"></script>   
+    <script src="/js/client.js"></script>
+    <script src="api.js"></script>
+    <script src="client.js"></script>
 </body>
 </html>
+
+

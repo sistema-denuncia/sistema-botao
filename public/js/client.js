@@ -37,7 +37,7 @@ async function enviarEmergencia() {
     }
 
     mostrarStatus('Enviando alerta para a central...', 'alerta');
-    const resposta = await fetch('/api/emergencia', {
+    const resposta = await window.apiFetch('/api/emergencia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dados),
