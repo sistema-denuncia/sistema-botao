@@ -8,7 +8,7 @@ const bootstrapAdministrator = usuariosRoute.bootstrapAdministrator;
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = Number(process.env.PORT || 5502);
+const PORT = Number(process.env.PORT || 3000);
 const isLocalOrigin = (origin) => {
   try {
     const url = new URL(origin);
