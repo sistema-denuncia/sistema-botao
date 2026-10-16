@@ -11,9 +11,10 @@
     <main class="container">
         <header class="cabecalho">
             <span class="sinalizador" aria-hidden="true"></span>
-            <p class="eyebrow">OPERAÇÃO DE EMERGÊNCIA</p>
-            <h1>Botão de emergência</h1>
-            <p class="subtitulo">Acione a central quando precisar de atendimento imediato.</p>
+            <p class="eyebrow">CANAL PRIORITÁRIO</p>
+            <h1>Acionamento de emergência</h1>
+            <p class="subtitulo">Central de resposta conectada</p>
+            <p id="usuarioLogado" class="subtitulo" aria-live="polite"></p>
         </header>
 
         <section class="painel-acionamento" aria-label="Acionamento de emergência">
@@ -28,9 +29,22 @@
             </div>
         </section>
 
-        <footer class="rodape"><span class="cadeado" aria-hidden="true">●</span> Sistema protegido para agentes autorizados</footer>
+        <div class="status-box" aria-live="polite">
+            <span class="status-ponto" aria-hidden="true"></span>
+            <p id="status" role="status">Pronto para receber um acionamento</p>
+        </div>
+
+        <footer class="rodape">
+            <button id="btnSair" type="button">Sair da conta</button>
+            <span class="cadeado" aria-hidden="true">●</span>
+            <span>Seu alerta será encaminhado imediatamente</span>
+        </footer>
     </main>
+
+    <script src="/js/client.js"></script>
     <script src="api.js"></script>
     <script src="client.js"></script>
 </body>
 </html>
+
+

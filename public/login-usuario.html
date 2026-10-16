@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Touch - Login do Usuário</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>🚨 One Touch</h1>
+    <p class="tagline">"Sua segurança a um toque de distância. Resposta rápida quando cada segundo conta."</p>
+  </header>
+
+  <main class="main-container">
+    <div class="split-container">
+      
+      <!-- Painel Informativo (Esquerda) -->
+      <section class="info-panel">
+        <h2>O que é o One Touch?</h2>
+        <p>O <strong>One Touch</strong> é um sistema integrado focado na agilidade de resposta para situações de emergência e apoio ao cidadão.</p>
+        
+        <ul class="info-features">
+          <li><span>✓</span> <strong>Agilidade:</strong> Disparo de alerta em tempo real para as autoridades e contatos cadastrados.</li>
+          <li><span>✓</span> <strong>Praticidade:</strong> Interface limpa e direta para navegação rápida em momentos críticos.</li>
+          <li><span>✓</span> <strong>Privacidade:</strong> Dados criptografados e visíveis apenas durante o acionamento do botão de emergência.</li>
+        </ul>
+      </section>
+
+      <!-- Formulário de Login (Direita / Centro) -->
+      <section class="form-panel">
+        <h2 style="margin-bottom: 20px;">Acesso ao Sistema</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">E-mail</label>
+            <input type="email" id="loginEmail" required placeholder="seu.email@exemplo.com">
+          </div>
+
+          <div class="form-group">
+            <label for="loginSenha">Senha</label>
+            <input type="password" id="loginSenha" required placeholder="••••••••">
+          </div>
+
+          <button type="submit" class="btn-primary">Entrar no Sistema</button>
+
+          <div class="register-prompt">
+            <p>Ainda não possui uma conta?</p>
+            <p id="mensagemLogin" role="status" aria-live="polite"></p>
+            <p><a href="/cadastro">Cadastre-se aqui</a></p>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

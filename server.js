@@ -5,6 +5,7 @@ const path = require('path');
 const emergenciaRoute = require('./routes/emergencia');
 const usuariosRoute = require('./routes/usuarios');
 const bootstrapAdministrator = usuariosRoute.bootstrapAdministrator;
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = Number(process.env.PORT || 5502);
@@ -32,17 +33,27 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: '32kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api/auth', authRoutes.router);
 
 app.get('/api/saude', (req, res) => {
   res.json({
     sucesso: true,
     servidor: 'online',
     destino: process.env.POLICIA_SERVER_URL || 'http://localhost:3001',
+    integracaoConfigurada: Boolean(process.env.POLICIA_API_KEY && process.env.SESSION_SECRET),
   });
 });
 
 app.use('/api/emergencia', emergenciaRoute);
 app.use('/api/usuarios', usuariosRoute);
+
+app.get('/cadastro', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'cadastro.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login-usuario.html'));
+});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

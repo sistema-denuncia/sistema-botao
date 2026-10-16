@@ -1,27 +1,22 @@
 const btn = document.getElementById('btnEmergencia');
 const status = document.getElementById('status');
+const usuarioLogado = document.getElementById('usuarioLogado');
+const btnSair = document.getElementById('btnSair');
 
 let envioEmCurso = false;
+let sessaoValida = false;
 
 function mostrarStatus(mensagem, tipo = '') {
   status.innerText = mensagem;
   status.parentElement.dataset.tipo = tipo;
 }
 
-function obterClienteId() {
-  const chave = 'emergencia_cliente_id';
-  let id = localStorage.getItem(chave);
-
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(chave, id);
+async function enviarEmergencia() {
+  if (!sessaoValida) {
+    window.location.href = '/login';
+    return;
   }
 
-  // Gera outro ID depois que uma ocorrência foi concluída pelo servidor.
-  return id;
-}
-
-async function enviarEmergencia() {
   envioEmCurso = true;
   btn.disabled = true;
   btn.classList.add('enviando');
@@ -30,7 +25,6 @@ async function enviarEmergencia() {
 
   try {
     const dados = {
-      clienteId: obterClienteId(),
       tipo: 'EMERGENCIA',
       prioridade: 'ALTA',
       dispositivo: navigator.userAgent,
@@ -75,6 +69,32 @@ btn.addEventListener('click', () => {
   if (!envioEmCurso) enviarEmergencia();
 });
 
+btnSair.addEventListener('click', async () => {
+  await fetch('/api/auth/logout', { method: 'POST' });
+  window.location.href = '/login';
+});
+
+async function verificarSessao() {
+  btn.disabled = true;
+  mostrarStatus('Verificando sua conta...', 'alerta');
+
+  try {
+    const resposta = await fetch('/api/auth/sessao');
+    if (!resposta.ok) {
+      window.location.href = '/login';
+      return;
+    }
+    const resultado = await resposta.json();
+    sessaoValida = true;
+    usuarioLogado.textContent = `Olá, ${resultado.usuario.nome}`;
+    btn.disabled = false;
+    mostrarStatus('Pronto para receber um acionamento');
+  } catch (erro) {
+    mostrarStatus('Não foi possível verificar seu acesso. Tente novamente.', 'erro');
+    console.error('Erro ao verificar sessão:', erro);
+  }
+}
+
 async function obterLocalizacao() {
   // Uma única leitura de GPS (getCurrentPosition): pega a posição mais rápida
   // disponível, sem esperar múltiplas amostras para calibrar/refinar a
@@ -107,3 +127,4 @@ async function obterLocalizacao() {
 }
 
 console.log('Botão de emergência carregado.');
+verificarSessao();
