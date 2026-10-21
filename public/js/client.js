@@ -47,9 +47,12 @@ async function enviarEmergencia() {
     });
     if (!resposta.ok || !resultado.sucesso) throw new Error(resultado.mensagem || `Erro do servidor: ${resposta.status}`);
 
-    const mensagemSucesso = resultado.duplicado
-      ? `Alerta já registrado. ${resultado.quantidadeAcionamentos} acionamentos contabilizados.`
-      : `Emergência registrada. Protocolo: ${resultado.protocolo}`;
+    let mensagemSucesso;
+    if (resultado.duplicado) {
+      mensagemSucesso = `Chamado em aberto. ${resultado.quantidadeAcionamentos} acionamentos registrados.`;
+    } else {
+      mensagemSucesso = `Emergência registrada! Protocolo: ${resultado.protocolo}`;
+    }
     mostrarStatus(mensagemSucesso, 'sucesso');
   } catch (erro) {
     const mensagem = erro instanceof TypeError

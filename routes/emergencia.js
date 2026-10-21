@@ -71,10 +71,12 @@ router.post('/', limiter, autenticarSessao, async (req, res) => {
 
     res.status(resposta.statusCode).json(resposta.body);
   } catch (err) {
-    console.error('Falha ao encaminhar emergência:', err.message);
+    console.error('Falha ao encaminhar emergência:', err.message, '| status:', err.statusCode);
     res.status(err.statusCode || 502).json({
       sucesso: false,
-      mensagem: 'Não foi possível comunicar com o sistema da polícia.',
+      mensagem: err.statusCode === 400
+        ? err.message   // repassa a mensagem exata do policia (ajuda debug)
+        : 'Não foi possível comunicar com o sistema da polícia.',
     });
   }
 });
