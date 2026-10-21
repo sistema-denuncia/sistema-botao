@@ -8,7 +8,7 @@ const router = express.Router();
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
-  max: Number(process.env.EMERGENCIA_RATE_LIMIT || 10),
+  max: Number(process.env.EMERGENCIA_RATE_LIMIT || 100),
   standardHeaders: true,
   legacyHeaders: false,
 });
