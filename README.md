@@ -21,6 +21,11 @@ O cadastro, login e acionamento usam a API e o banco MySQL do projeto
 4. Acesse `http://localhost:3000/cadastro`, crie uma conta e depois entre em
    `http://localhost:3000/login`.
 
+Se a porta 3000 já estiver ocupada, `npm start` tenta a próxima porta livre e
+mostra o endereço correto no terminal. Para escolher uma porta específica,
+defina `PORT` no `.env`; nesse caso, o servidor informa um erro se ela já
+estiver em uso.
+
 O cadastro grava nome, CPF, data de nascimento e e-mail na tabela `usuarios`.
 A senha é armazenada com hash scrypt. O login cria uma sessão assinada em
 cookie HttpOnly; o acionamento usa o ID do usuário autenticado, não um
