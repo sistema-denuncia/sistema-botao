@@ -61,9 +61,156 @@ body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+.login-page {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--navy-blue);
+  color: #F4F7FA;
+}
+
+.login-page .app-header {
+  display: none;
+}
+
+.login-main {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.login-split {
+  display: grid;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.login-page .info-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 5.2vw, 76px);
+}
+
+.login-page .info-panel h2 {
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  line-height: 1.25;
+}
+
+.login-page .form-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(12px, 3vh, 28px) clamp(32px, 5.2vw, 76px);
+  color: var(--text-dark);
+  background: #F8F7F2;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--primary-red);
+  color: var(--navy-blue);
+  font-size: clamp(1.55rem, 2.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.login-brand span:first-child {
+  font-size: 1.4em;
+  line-height: 1;
+}
+
+.login-page .form-panel h2,
+.login-page .form-panel label {
+  color: var(--text-dark);
+}
+
+.login-page .form-panel h2 {
+  width: 100%;
+  margin: 3px 0 18px;
+  text-align: center;
+}
+
+.login-page .form-panel form {
+  width: 100%;
+  max-width: 342px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.login-page .form-panel input {
+  border-color: var(--border-gray);
+  color: var(--text-dark);
+  background: #FFF;
+}
+
+.login-page .form-panel input::placeholder {
+  color: #718096;
+}
+
+.login-page .register-prompt {
+  border-color: var(--border-gray);
+  color: #475569;
+}
+
+.login-page .register-prompt a {
+  color: var(--primary-red);
+}
+
 @media (max-width: 768px) {
+  .login-page {
+    height: auto;
+    overflow: visible;
+  }
+
   .split-container {
     grid-template-columns: 1fr;
+  }
+
+  .login-main {
+    width: 100%;
+    padding: 0;
+  }
+
+  .login-split {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .login-page .info-panel,
+  .login-page .form-panel {
+    padding: clamp(26px, 6vw, 40px);
+  }
+
+  .login-page .form-panel {
+    min-height: 100svh;
+  }
+}
+
+@media (max-width: 420px) {
+  .login-page .info-panel,
+  .login-page .form-panel {
+    padding: 24px 20px;
   }
 }
 
