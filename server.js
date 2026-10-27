@@ -8,6 +8,7 @@ const bootstrapAdministrator = usuariosRoute.bootstrapAdministrator;
 const authRoutes = require('./routes/auth');
 
 const app = express();
+const PORT_CONFIGURADA = Boolean(process.env.PORT);
 const PORT = Number(process.env.PORT || 3000);
 const isLocalOrigin = (origin) => {
   try {
@@ -63,12 +64,26 @@ app.use((req, res) => {
   res.status(404).json({ erro: `Rota "${req.method} ${req.path}" não encontrada.` });
 });
 
+function iniciarServidor(porta) {
+  const servidor = app.listen(porta, () => {
+    const endereco = servidor.address();
+    console.log(`Botão de emergência disponível em http://localhost:${endereco.port}`);
+  });
+
+  servidor.on('error', (erro) => {
+    if (erro.code === 'EADDRINUSE' && !PORT_CONFIGURADA && porta < 65535) {
+      console.warn(`A porta ${porta} está ocupada. Tentando a porta ${porta + 1}.`);
+      iniciarServidor(porta + 1);
+      return;
+    }
+
+    console.error(`Não foi possível iniciar o servidor na porta ${porta}: ${erro.message}`);
+    process.exitCode = 1;
+  });
+}
+
 bootstrapAdministrator()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Botão de emergência disponível em http://localhost:${PORT}`);
-    });
-  })
+  .then(() => iniciarServidor(PORT))
   .catch((error) => {
     console.error('Não foi possível preparar o administrador inicial:', error.message);
     process.exitCode = 1;

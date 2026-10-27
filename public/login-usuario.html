@@ -6,31 +6,36 @@
   <title>One Touch - Login do Usuário</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="login-page">
 
   <header class="app-header">
     <h1>🚨 One Touch</h1>
     <p class="tagline">"Sua segurança a um toque de distância. Resposta rápida quando cada segundo conta."</p>
   </header>
 
-  <main class="main-container">
-    <div class="split-container">
-      
-      <!-- Painel Informativo (Esquerda) -->
+  <main class="main-container login-main">
+    <div class="split-container login-split">
       <section class="info-panel">
-        <h2>O que é o One Touch?</h2>
-        <p>O <strong>One Touch</strong> é um sistema integrado focado na agilidade de resposta para situações de emergência e apoio ao cidadão.</p>
-        
+        <p class="info-eyebrow">SEGURANÇA E ORIENTAÇÃO</p>
+        <h2>Um canal de apoio para momentos críticos</h2>
+        <p>O <strong>One Touch</strong> foi pensado para facilitar o envio de um alerta de emergência e das informações necessárias para que a ocorrência seja identificada.</p>
+
         <ul class="info-features">
-          <li><span>✓</span> <strong>Agilidade:</strong> Disparo de alerta em tempo real para as autoridades e contatos cadastrados.</li>
-          <li><span>✓</span> <strong>Praticidade:</strong> Interface limpa e direta para navegação rápida em momentos críticos.</li>
-          <li><span>✓</span> <strong>Privacidade:</strong> Dados criptografados e visíveis apenas durante o acionamento do botão de emergência.</li>
+          <li><span aria-hidden="true">✓</span> <strong>Orientação:</strong> entenda o que acontece ao acionar o alerta.</li>
+          <li><span aria-hidden="true">✓</span> <strong>Transparência:</strong> saiba quais informações podem ser enviadas.</li>
+          <li><span aria-hidden="true">✓</span> <strong>Uso responsável:</strong> conheça os limites do serviço e quando procurar ajuda oficial.</li>
         </ul>
+
+        <a class="info-link" href="sobre.html">Conheça o projeto e como usar <span aria-hidden="true">→</span></a>
       </section>
 
       <!-- Formulário de Login (Direita / Centro) -->
       <section class="form-panel">
-        <h2 style="margin-bottom: 20px;">Acesso ao Sistema</h2>
+        <div class="login-brand" aria-label="One Touch">
+          <span aria-hidden="true">🚨</span>
+          <span>ONE TOUCH</span>
+        </div>
+        <h2>Acesso ao Sistema</h2>
         <form id="loginForm">
           <div class="form-group">
             <label for="loginEmail">E-mail</label>
