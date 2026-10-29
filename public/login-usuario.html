@@ -3,70 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Denúncias</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>One Touch - Login do Usuário</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <div class="container">
-    
-    <!-- TELA DE LOGIN -->
-    <div id="login-card" class="card">
-      <h2>Acessar Conta</h2>
-      <form id="form-login">
-        <div class="input-group">
-          <label for="login-email">E-mail</label>
-          <input type="email" id="login-email" required placeholder="seu@email.com">
+<body class="login-page">
+
+  <header class="app-header">
+    <h1>🚨 One Touch</h1>
+    <p class="tagline">"Sua segurança a um toque de distância. Resposta rápida quando cada segundo conta."</p>
+  </header>
+
+  <main class="main-container login-main">
+    <div class="split-container login-split">
+      <section class="info-panel">
+        <p class="info-eyebrow">SEGURANÇA E ORIENTAÇÃO</p>
+        <h2>Um canal de apoio para momentos críticos</h2>
+        <p>O <strong>One Touch</strong> foi pensado para facilitar o envio de um alerta de emergência e das informações necessárias para que a ocorrência seja identificada.</p>
+
+        <ul class="info-features">
+          <li><span aria-hidden="true">✓</span> <strong>Orientação:</strong> entenda o que acontece ao acionar o alerta.</li>
+          <li><span aria-hidden="true">✓</span> <strong>Transparência:</strong> saiba quais informações podem ser enviadas.</li>
+          <li><span aria-hidden="true">✓</span> <strong>Uso responsável:</strong> conheça os limites do serviço e quando procurar ajuda oficial.</li>
+        </ul>
+
+        <a class="info-link" href="sobre.html">Conheça o projeto e como usar <span aria-hidden="true">→</span></a>
+      </section>
+
+      <!-- Formulário de Login (Direita / Centro) -->
+      <section class="form-panel">
+        <div class="login-brand" aria-label="One Touch">
+          <span aria-hidden="true">🚨</span>
+          <span>ONE TOUCH</span>
         </div>
-        <div class="input-group">
-          <label for="login-senha">Senha</label>
-          <input type="password" id="login-senha" required placeholder="******">
-        </div>
-        <button type="submit" class="btn-primary">Entrar</button>
-      </form>
-      <p class="switch-form">Ainda não tem conta? <a href="#" id="go-to-register">Cadastre-se</a></p>
+        <h2>Acesso ao Sistema</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">E-mail</label>
+            <input type="email" id="loginEmail" required placeholder="seu.email@exemplo.com">
+          </div>
+
+          <div class="form-group">
+            <label for="loginSenha">Senha</label>
+            <input type="password" id="loginSenha" required placeholder="••••••••">
+          </div>
+
+          <button type="submit" class="btn-primary">Entrar no Sistema</button>
+
+          <div class="register-prompt">
+            <p>Ainda não possui uma conta?</p>
+            <p id="mensagemLogin" role="status" aria-live="polite"></p>
+            <p><a href="/cadastro">Cadastre-se aqui</a></p>
+          </div>
+        </form>
+      </section>
+
     </div>
+  </main>
 
-    <!-- TELA DE CADASTRO -->
-    <div id="register-card" class="card hidden">
-      <h2>Cadastro do Usuário</h2>
-      <form id="form-register">
-        <div class="input-group">
-          <label for="reg-nome">Nome Completo</label>
-          <input type="text" id="reg-nome" placeholder="Seu nome" required>
-        </div>
-        
-        <div class="input-group">
-          <label for="reg-cpf">CPF</label>
-          <input type="text" id="reg-cpf" placeholder="000.000.000-00" required>
-        </div>
-
-        <div class="input-group">
-          <label for="reg-email">E-mail</label>
-          <input type="email" id="reg-email" placeholder="seu@email.com" required>
-        </div>
-
-        <div class="input-group">
-          <label for="reg-telefone">Telefone / WhatsApp</label>
-          <input type="tel" id="reg-telefone" placeholder="(11) 99999-9999" required>
-        </div>
-
-        <div class="input-group">
-          <label for="reg-senha">Senha</label>
-          <input type="password" id="reg-senha" placeholder="******" required>
-        </div>
-
-        <div class="checkbox-group">
-          <input type="checkbox" id="reg-anonimo">
-          <label for="reg-anonimo">Desejo manter meu perfil como anônimo por padrão nas denúncias</label>
-        </div>
-
-        <button type="submit" class="btn-primary">Criar Conta</button>
-      </form>
-      <p class="switch-form">Já possui conta? <a href="#" id="go-to-login">Fazer Login</a></p>
-    </div>
-
-  </div>
-
-  <script src="script.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

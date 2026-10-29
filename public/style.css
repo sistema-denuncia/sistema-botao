@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    background: #000;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,14 +14,14 @@ body {
 }
 
 :root {
-    --bg: #080d12;
-    --panel: rgba(18, 27, 35, .88);
-    --line: rgba(173, 195, 211, .16);
-    --text: #eef5f7;
-    --muted: #91a4ae;
+    --bg: #000;
+    --panel: rgba(12, 12, 12, .96);
+    --line: rgba(255, 255, 255, .14);
+    --text: #eee;
+    --muted: #999;
     --red: #ef4f57;
     --red-dark: #a51f31;
-    --cyan: #63d7d2;
+    --cyan: #bdbdbd;
 }
 
 * { box-sizing: border-box; }
@@ -33,7 +33,7 @@ body {
     place-items: center;
     padding: 28px 18px;
     color: var(--text);
-    background: radial-gradient(circle at 50% 34%, #1a2931 0, var(--bg) 48%, #050709 100%);
+    background: radial-gradient(circle at 50% 34%, #111 0, var(--bg) 48%, #000 100%);
     font-family: "Trebuchet MS", "Segoe UI", sans-serif;
 }
 
@@ -54,7 +54,7 @@ h1 { margin: 0; font-size: clamp(26px, 7vw, 38px); line-height: 1.05; letter-spa
     margin: 0 auto;
     padding: 24px;
     overflow: hidden;
-    border: 10px solid #202d36;
+    border: 10px solid #292929;
     border-radius: 50%;
     color: white;
     background: radial-gradient(circle at 35% 28%, #fb6a6b, var(--red) 47%, var(--red-dark) 100%);
