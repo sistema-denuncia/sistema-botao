@@ -6,6 +6,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const anoInput = document.getElementById('ano');
   const cpfInput = document.getElementById('cpf');
   const cadastroForm = document.getElementById('cadastroForm');
+  const camposDataNascimento = [diaInput, mesInput, anoInput];
+  const maxDataNascimento = window.validacaoDataNascimento.obterDataMaximaPermitida();
+
+  hiddenDatePicker.max = maxDataNascimento;
+
+  function montarDataNascimento() {
+    if (!camposDataNascimento.every((campo) => /^\d+$/.test(campo.value))) return '';
+    if (diaInput.value.length !== 2 || mesInput.value.length !== 2 || anoInput.value.length !== 4) {
+      return '';
+    }
+    return `${anoInput.value}-${mesInput.value}-${diaInput.value}`;
+  }
+
+  function sincronizarDataDigitada() {
+    const dataNascimento = montarDataNascimento();
+    hiddenDatePicker.value = dataNascimento
+      && !window.validacaoDataNascimento.validarDataNascimento(dataNascimento)
+      ? dataNascimento
+      : '';
+  }
+
+  camposDataNascimento.forEach((campo, indice) => {
+    campo.addEventListener('input', () => {
+      campo.value = campo.value.replace(/\D/g, '').slice(0, campo.maxLength);
+      sincronizarDataDigitada();
+
+      if (campo.value.length === campo.maxLength && camposDataNascimento[indice + 1]) {
+        camposDataNascimento[indice + 1].focus();
+      }
+    });
+
+    campo.addEventListener('keydown', (evento) => {
+      if (evento.key === 'Backspace' && !campo.value && camposDataNascimento[indice - 1]) {
+        camposDataNascimento[indice - 1].focus();
+      }
+    });
+  });
 
   if (openCalendarBtn && hiddenDatePicker) {
     openCalendarBtn.addEventListener('click', () => {
@@ -18,6 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     hiddenDatePicker.addEventListener('change', (e) => {
       if (e.target.value) {
+        const erroData = window.validacaoDataNascimento.validarDataNascimento(e.target.value);
+        if (erroData) {
+          e.target.value = '';
+          return;
+        }
+
         const [ano, mes, dia] = e.target.value.split('-');
         diaInput.value = dia;
         mesInput.value = mes;
@@ -42,13 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const nome = document.getElementById('nomeCompleto').value.trim();
       const cpf = cpfInput.value;
-      const dataNascimento = hiddenDatePicker.value;
+      const dataNascimento = montarDataNascimento();
       const email = document.getElementById('email').value;
       const confirmarEmail = document.getElementById('confirmarEmail').value;
       const senha = document.getElementById('senha').value;
       const confirmarSenha = document.getElementById('confirmarSenha').value;
       const mensagem = document.getElementById('mensagemCadastro');
       const botao = cadastroForm.querySelector('[type="submit"]');
+      const erroNome = window.validarNomeCompleto(nome);
+
+      if (erroNome) {
+        mensagem.textContent = erroNome;
+        return;
+      }
+
+      const erroSenha = window.validarSenhaCadastro(senha);
+      if (erroSenha) {
+        mensagem.textContent = erroSenha;
+        return;
+      }
 
       if (email !== confirmarEmail) {
         mensagem.textContent = 'Os e-mails digitados não coincidem.';
@@ -60,8 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!dataNascimento) {
-        mensagem.textContent = 'Selecione sua data de nascimento.';
+      const erroDataNascimento = window.validacaoDataNascimento.validarDataNascimento(dataNascimento);
+      if (erroDataNascimento) {
+        mensagem.textContent = erroDataNascimento;
+        diaInput.focus();
         return;
       }
 
