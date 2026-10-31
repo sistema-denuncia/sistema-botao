@@ -320,6 +320,39 @@ body {
   gap: 8px;
 }
 
+.date-fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.date-fieldset legend {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.date-input-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+
+.date-fieldset small {
+  display: block;
+  margin-top: 6px;
+}
+
+.date-picker-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .calendar-trigger {
   background: var(--navy-blue);
   color: white;
