@@ -113,6 +113,11 @@ async function iniciarEmergencia() {
   mostrarStatus('Obtendo localização inicial...', 'alerta');
 
   try {
+    const localizacao = await obterLocalizacao();
+    localizacaoObtida = Number.isFinite(localizacao.latitude)
+      && Number.isFinite(localizacao.longitude)
+      && Number.isFinite(localizacao.acuraciaMetros);
+
     const dados = {
       tipo: 'EMERGENCIA',
       prioridade: 'ALTA',
@@ -120,8 +125,17 @@ async function iniciarEmergencia() {
       localizacao: await obterLocalizacao(),
       rastreamento: false,
     };
+      localizacao,
+    };
+    const acuracia = dados.localizacao.acuraciaMetros;
+    if (Number.isFinite(acuracia) && acuracia > 5000) {
+      mostrarStatus('Localização imprecisa. Enviando mesmo assim...', 'alerta');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else if (!localizacaoObtida) {
+      mostrarStatus('Localização não pôde ser obtida. Enviando alerta sem localização...', 'alerta');
+    }
 
-    mostrarStatus('Enviando alerta para a central...', 'alerta');
+    if (localizacaoObtida) mostrarStatus('Enviando alerta para a central...', 'alerta');
     const resposta = await window.apiFetch('/api/emergencia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -239,5 +253,32 @@ async function verificarSessao() {
   }
 }
 
-console.log('Botão de emergência com rastreamento contínuo carregado.');
+async function obterLocalizacao() {
+  const TIMEOUT_MS = 5000;
+
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      console.warn('Não foi possível obter a localização: geolocalização não disponível neste navegador.');
+      resolve({ latitude: null, longitude: null, acuraciaMetros: null });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        resolve({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          acuraciaMetros: coords.accuracy,
+        });
+      },
+      (erro) => {
+        console.warn('Não foi possível obter a localização:', erro.message);
+        resolve({ latitude: null, longitude: null, acuraciaMetros: null });
+      },
+      { enableHighAccuracy: true, maximumAge: 60000, timeout: TIMEOUT_MS }
+    );
+  });
+}
+
+console.log('Botão de emergência carregado.');
 verificarSessao();
