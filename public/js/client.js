@@ -22,21 +22,29 @@ async function enviarEmergencia() {
   btn.classList.add('enviando');
   btn.querySelector('.texto-botao').textContent = 'ENVIANDO ALERTA';
   mostrarStatus('Obtendo localização...', 'alerta');
+  let localizacaoObtida = false;
 
   try {
+    const localizacao = await obterLocalizacao();
+    localizacaoObtida = Number.isFinite(localizacao.latitude)
+      && Number.isFinite(localizacao.longitude)
+      && Number.isFinite(localizacao.acuraciaMetros);
+
     const dados = {
       tipo: 'EMERGENCIA',
       prioridade: 'ALTA',
       dispositivo: navigator.userAgent,
-      localizacao: await obterLocalizacao(),
+      localizacao,
     };
-    const acuracia = dados.localizacao?.acuracia;
+    const acuracia = dados.localizacao.acuraciaMetros;
     if (Number.isFinite(acuracia) && acuracia > 5000) {
       mostrarStatus('Localização imprecisa. Enviando mesmo assim...', 'alerta');
       await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else if (!localizacaoObtida) {
+      mostrarStatus('Localização não pôde ser obtida. Enviando alerta sem localização...', 'alerta');
     }
 
-    mostrarStatus('Enviando alerta para a central...', 'alerta');
+    if (localizacaoObtida) mostrarStatus('Enviando alerta para a central...', 'alerta');
     const resposta = await window.apiFetch('/api/emergencia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -53,12 +61,16 @@ async function enviarEmergencia() {
     } else {
       mensagemSucesso = `Emergência registrada! Protocolo: ${resultado.protocolo}`;
     }
+    if (!localizacaoObtida) mensagemSucesso += ' A localização não pôde ser obtida.';
     mostrarStatus(mensagemSucesso, 'sucesso');
   } catch (erro) {
     const mensagem = erro instanceof TypeError
       ? 'Sem conexão com o servidor. Verifique sua internet e tente novamente.'
       : erro.message;
-    mostrarStatus(mensagem || 'Não foi possível enviar o alerta. Tente novamente.', 'erro');
+    const mensagemLocalizacao = localizacaoObtida
+      ? ''
+      : ' A localização não pôde ser obtida.';
+    mostrarStatus(`${mensagem || 'Não foi possível enviar o alerta. Tente novamente.'}${mensagemLocalizacao}`, 'erro');
     console.error('Erro ao enviar alerta:', erro);
   } finally {
     envioEmCurso = false;
@@ -99,14 +111,12 @@ async function verificarSessao() {
 }
 
 async function obterLocalizacao() {
-  // Uma única leitura de GPS (getCurrentPosition): pega a posição mais rápida
-  // disponível, sem esperar múltiplas amostras para calibrar/refinar a
-  // precisão. Isso agiliza o envio do alerta de emergência.
   const TIMEOUT_MS = 5000;
 
   return new Promise((resolve) => {
     if (!navigator.geolocation) {
-      resolve({ latitude: null, longitude: null, acuracia: null });
+      console.warn('Não foi possível obter a localização: geolocalização não disponível neste navegador.');
+      resolve({ latitude: null, longitude: null, acuraciaMetros: null });
       return;
     }
 
@@ -115,14 +125,12 @@ async function obterLocalizacao() {
         resolve({
           latitude: coords.latitude,
           longitude: coords.longitude,
-          acuracia: Number.isFinite(coords.accuracy) ? coords.accuracy : null,
+          acuraciaMetros: coords.accuracy,
         });
       },
       (erro) => {
-        // Não bloqueia o envio do alerta: a emergência é registrada mesmo sem
-        // localização, mas registramos o motivo para eventual diagnóstico.
         console.warn('Não foi possível obter a localização:', erro.message);
-        resolve({ latitude: null, longitude: null, acuracia: null });
+        resolve({ latitude: null, longitude: null, acuraciaMetros: null });
       },
       { enableHighAccuracy: true, maximumAge: 60000, timeout: TIMEOUT_MS }
     );
