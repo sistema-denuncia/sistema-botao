@@ -1,8 +1,17 @@
 const express = require('express');
 const http = require('http');
 const https = require('https');
+const rateLimit = require('express-rate-limit');
+const { autenticarSessao } = require('./auth');
 
 const router = express.Router();
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: Number(process.env.EMERGENCIA_RATE_LIMIT || 100),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function encaminharParaPolicia(body) {
   return new Promise((resolve, reject) => {
@@ -25,7 +34,7 @@ function encaminharParaPolicia(body) {
       response.on('data', (chunk) => { data += chunk; });
       response.on('end', () => {
         let json;
-        try { json = JSON.parse(data); } catch { json = { mensagem: data }; }
+        try { json = JSON.parse(data); } catch { json = { mensagem: data || 'Resposta inválida do serviço da polícia.' }; }
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           return resolve({ statusCode: response.statusCode, body: json });
@@ -44,12 +53,8 @@ function encaminharParaPolicia(body) {
   });
 }
 
-router.post('/', async (req, res) => {
-  const { clienteId, tipo, prioridade, dispositivo, localizacao } = req.body;
-
-  if (!clienteId) {
-    return res.status(400).json({ sucesso: false, mensagem: 'Identificador do acionamento ausente.' });
-  }
+router.post('/', limiter, autenticarSessao, async (req, res) => {
+  const { tipo, prioridade, dispositivo, localizacao } = req.body || {};
 
   if (!process.env.POLICIA_API_KEY) {
     return res.status(503).json({ sucesso: false, mensagem: 'Serviço de emergência não configurado.' });
@@ -57,19 +62,21 @@ router.post('/', async (req, res) => {
 
   try {
     const resposta = await encaminharParaPolicia({
-      clienteId,
+      clienteId: String(req.usuario.usuarioId),
       tipo: tipo || 'EMERGENCIA',
       prioridade: prioridade || 'ALTA',
       dispositivo,
       localizacao,
     });
 
-    res.status(resposta.statusCode).json(resposta.body);
+    return res.status(resposta.statusCode).json(resposta.body);
   } catch (err) {
-    console.error('Falha ao encaminhar emergência:', err.message);
-    res.status(err.statusCode || 502).json({
+    console.error('Falha ao encaminhar emergência:', err.message, '| status:', err.statusCode);
+    return res.status(err.statusCode || 502).json({
       sucesso: false,
-      mensagem: 'Não foi possível comunicar com o sistema da polícia.',
+      mensagem: err.statusCode === 400
+        ? err.message
+        : 'Não foi possível comunicar com o sistema da polícia.',
     });
   }
 });
