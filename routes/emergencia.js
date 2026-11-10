@@ -54,7 +54,7 @@ function encaminharParaPolicia(body) {
 }
 
 router.post('/', limiter, autenticarSessao, async (req, res) => {
-  const { tipo, prioridade, dispositivo, localizacao } = req.body || {};
+  const { tipo, prioridade, dispositivo, localizacao, rastreamento } = req.body || {};
 
   if (!process.env.POLICIA_API_KEY) {
     return res.status(503).json({ sucesso: false, mensagem: 'Serviço de emergência não configurado.' });
@@ -67,6 +67,7 @@ router.post('/', limiter, autenticarSessao, async (req, res) => {
       prioridade: prioridade || 'ALTA',
       dispositivo,
       localizacao,
+      rastreamento: Boolean(rastreamento),
     });
 
     res.status(resposta.statusCode).json(resposta.body);
