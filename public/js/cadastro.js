@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (openCalendarBtn && hiddenDatePicker) {
     openCalendarBtn.addEventListener('click', () => {
+      const dataNascimento = montarDataNascimento();
+      hiddenDatePicker.value = dataNascimento
+        && !window.validacaoDataNascimento.validarDataNascimento(dataNascimento)
+        ? dataNascimento
+        : maxDataNascimento;
+
       if (hiddenDatePicker.showPicker) {
         hiddenDatePicker.showPicker();
       } else {
@@ -65,17 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         diaInput.value = dia;
         mesInput.value = mes;
         anoInput.value = ano;
+        sincronizarDataDigitada();
       }
     });
   }
 
   if (cpfInput) {
     cpfInput.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\D/g, '');
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      e.target.value = value.substring(0, 14);
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+      cpfInput.setCustomValidity(window.validarCpfCadastro(cpfInput.value) || '');
     });
   }
 
@@ -93,6 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const mensagem = document.getElementById('mensagemCadastro');
       const botao = cadastroForm.querySelector('[type="submit"]');
       const erroNome = window.validarNomeCompleto(nome);
+
+      const erroCpf = window.validarCpfCadastro(cpf);
+      if (erroCpf) {
+        mensagem.textContent = erroCpf;
+        cpfInput.focus();
+        return;
+      }
 
       if (erroNome) {
         mensagem.textContent = erroNome;

@@ -5,6 +5,7 @@ const express = require('express');
 const validarNomeCompleto = require('../public/js/name-validation');
 const validarSenhaCadastro = require('../public/js/password-validation');
 const { validarDataNascimento } = require('../public/js/birth-date-validation');
+const validarCpfCadastro = require('../public/js/cpf-validation');
 
 const router = express.Router();
 const COOKIE_NAME = 'one_touch_sessao';
@@ -142,6 +143,12 @@ function autenticarSessao(req, res, next) {
 }
 
 router.post('/cadastro', async (req, res) => {
+  const cpf = typeof req.body?.cpf === 'string' ? req.body.cpf : '';
+  const erroCpf = validarCpfCadastro(cpf);
+  if (erroCpf) {
+    return res.status(400).json({ sucesso: false, mensagem: erroCpf });
+  }
+
   const nome = typeof req.body?.nome === 'string' ? req.body.nome : '';
   const erroNome = validarNomeCompleto(nome);
   if (erroNome) {

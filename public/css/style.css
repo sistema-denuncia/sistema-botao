@@ -1,3 +1,15 @@
+.video-background {
+  border-radius: 40px;   /* Define o arredondamento dos cantos */
+  overflow: hidden;      /* Esconde tudo o que tentar "vazar" das bordas */
+  display: inline-block; /* Faz o contêiner se ajustar ao tamanho do vídeo */
+  max-width: 100%;       /* Garante a responsividade */
+}
+
+.video-background video {
+  width: 100%;
+  display: block;        /* Remove espaçamentos indesejados abaixo do vídeo */
+}
+
 :root {
   --primary-red: #D32F2F;
   --primary-red-hover: #B71C1C;
@@ -133,6 +145,12 @@ body {
   font-size: clamp(1.55rem, 2.2vw, 2rem);
   font-weight: 800;
   letter-spacing: 0.04em;
+}
+
+.login-brand video {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .login-brand span:first-child {
@@ -341,6 +359,8 @@ body {
 .date-fieldset small {
   display: block;
   margin-top: 6px;
+  color: #475569;
+  line-height: 1.4;
 }
 
 .date-picker-hidden {
@@ -354,6 +374,8 @@ body {
 }
 
 .calendar-trigger {
+  align-self: end;
+  min-height: 42px;
   background: var(--navy-blue);
   color: white;
   border: none;
@@ -363,6 +385,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.calendar-trigger:hover {
+  background: #1b3550;
+}
+
+.calendar-trigger:focus-visible {
+  outline: 3px solid rgba(211, 47, 47, 0.35);
+  outline-offset: 2px;
 }
 
 .btn-primary {
