@@ -5,6 +5,7 @@ const express = require('express');
 const validarNomeCompleto = require('../public/js/name-validation');
 const validarSenhaCadastro = require('../public/js/password-validation');
 const { validarDataNascimento } = require('../public/js/birth-date-validation');
+const validarCpfCadastro = require('../public/js/cpf-validation');
 
 const router = express.Router();
 const COOKIE_NAME = 'one_touch_sessao';
@@ -132,6 +133,12 @@ function encaminharParaPolicia(caminho, body) {
   });
 }
 
+function normalizarGenero(genero) {
+  return typeof genero === 'string'
+    ? genero.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+    : '';
+}
+
 function autenticarSessao(req, res, next) {
   const sessao = lerToken(obterCookie(req));
   if (!sessao) {
@@ -142,6 +149,21 @@ function autenticarSessao(req, res, next) {
 }
 
 router.post('/cadastro', async (req, res) => {
+  const cpf = typeof req.body?.cpf === 'string' ? req.body.cpf : '';
+  const genero = typeof req.body?.genero === 'string'
+    ? req.body.genero
+    : (typeof req.body?.sexo === 'string' ? req.body.sexo : '');
+  const generoNormalizado = normalizarGenero(genero);
+  const generosPermitidos = new Set(['feminino', 'masculino', 'naobinario', 'prefironaoinformar']);
+
+  if (!generoNormalizado || !generosPermitidos.has(generoNormalizado)) {
+    return res.status(400).json({ sucesso: false, mensagem: 'Selecione um gênero válido.' });
+  }
+  const erroCpf = validarCpfCadastro(cpf);
+  if (erroCpf) {
+    return res.status(400).json({ sucesso: false, mensagem: erroCpf });
+  }
+
   const nome = typeof req.body?.nome === 'string' ? req.body.nome : '';
   const erroNome = validarNomeCompleto(nome);
   if (erroNome) {
