@@ -25,7 +25,7 @@ async function obterLocalizacao() {
 
   return new Promise((resolve) => {
     if (!navigator.geolocation) {
-      resolve({ latitude: null, longitude: null, acuracia: null });
+      resolve({ latitude: null, longitude: null, acuraciaMetros: null });
       return;
     }
 
@@ -34,12 +34,12 @@ async function obterLocalizacao() {
         resolve({
           latitude: coords.latitude,
           longitude: coords.longitude,
-          acuracia: Number.isFinite(coords.accuracy) ? coords.accuracy : null,
+          acuraciaMetros: Number.isFinite(coords.accuracy) ? coords.accuracy : null,
         });
       },
       (erro) => {
         console.warn('Não foi possível obter a localização:', erro.message);
-        resolve({ latitude: null, longitude: null, acuracia: null });
+        resolve({ latitude: null, longitude: null, acuraciaMetros: null });
       },
       { enableHighAccuracy: true, maximumAge: 10000, timeout: TIMEOUT_MS }
     );
@@ -69,8 +69,8 @@ async function enviarAtualizacaoLocalizacao() {
     if (resposta.ok) {
       contagemEnvios++;
       const agora = new Date().toLocaleTimeString('pt-BR');
-      const acuraciaTxt = Number.isFinite(localizacao?.acuracia)
-        ? ` (±${Math.round(localizacao.acuracia)}m)`
+      const acuraciaTxt = Number.isFinite(localizacao?.acuraciaMetros)
+        ? ` (±${Math.round(localizacao.acuraciaMetros)}m)`
         : '';
       mostrarStatus(`Rastreamento ativo • Posição enviada às ${agora}${acuraciaTxt} • ${contagemEnvios} envio(s)`, 'sucesso');
     }
@@ -114,7 +114,7 @@ async function iniciarEmergencia() {
 
   try {
     const localizacao = await obterLocalizacao();
-    localizacaoObtida = Number.isFinite(localizacao.latitude)
+    const localizacaoObtida = Number.isFinite(localizacao.latitude)
       && Number.isFinite(localizacao.longitude)
       && Number.isFinite(localizacao.acuraciaMetros);
 
@@ -122,10 +122,8 @@ async function iniciarEmergencia() {
       tipo: 'EMERGENCIA',
       prioridade: 'ALTA',
       dispositivo: navigator.userAgent,
-      localizacao: await obterLocalizacao(),
-      rastreamento: false,
-    };
       localizacao,
+      rastreamento: false,
     };
     const acuracia = dados.localizacao.acuraciaMetros;
     if (Number.isFinite(acuracia) && acuracia > 5000) {
@@ -251,33 +249,6 @@ async function verificarSessao() {
     mostrarStatus('Não foi possível verificar seu acesso. Tente novamente.', 'erro');
     console.error('Erro ao verificar sessão:', erro);
   }
-}
-
-async function obterLocalizacao() {
-  const TIMEOUT_MS = 5000;
-
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      console.warn('Não foi possível obter a localização: geolocalização não disponível neste navegador.');
-      resolve({ latitude: null, longitude: null, acuraciaMetros: null });
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        resolve({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          acuraciaMetros: coords.accuracy,
-        });
-      },
-      (erro) => {
-        console.warn('Não foi possível obter a localização:', erro.message);
-        resolve({ latitude: null, longitude: null, acuraciaMetros: null });
-      },
-      { enableHighAccuracy: true, maximumAge: 60000, timeout: TIMEOUT_MS }
-    );
-  });
 }
 
 console.log('Botão de emergência carregado.');
