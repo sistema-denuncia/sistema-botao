@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mesInput = document.getElementById('mes');
   const anoInput = document.getElementById('ano');
   const cpfInput = document.getElementById('cpf');
+  const generoInput = document.getElementById('genero');
   const cadastroForm = document.getElementById('cadastroForm');
   const camposDataNascimento = [diaInput, mesInput, anoInput];
   const maxDataNascimento = window.validacaoDataNascimento.obterDataMaximaPermitida();
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const nome = document.getElementById('nomeCompleto').value.trim();
       const cpf = cpfInput.value;
+      const genero = generoInput ? generoInput.value.trim() : '';
       const dataNascimento = montarDataNascimento();
       const email = document.getElementById('email').value;
       const confirmarEmail = document.getElementById('confirmarEmail').value;
@@ -107,6 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (erroNome) {
         mensagem.textContent = erroNome;
+        return;
+      }
+
+      if (!genero) {
+        mensagem.textContent = 'Selecione um gênero válido.';
+        generoInput?.focus();
         return;
       }
 
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const resposta = await fetch('/api/auth/cadastro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, cpf, dataNascimento, email, senha }),
+          body: JSON.stringify({ nome, cpf, genero, dataNascimento, email, senha }),
         });
         const resultado = await resposta.json();
         if (!resposta.ok || !resultado.sucesso) {

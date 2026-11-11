@@ -9,7 +9,14 @@
 <body>
 
   <header class="app-header">
-    <h1>🚨 One Touch</h1>
+    <div class="brand-header">
+      <div class="video-background" aria-label="Animação do One Touch">
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Animação do One Touch">
+          <source src="video.mp4" type="video/mp4">
+        </video>
+      </div>
+      <h1>One Touch</h1>
+    </div>
     <p class="tagline">Cadastro Único de Segurança e Emergência</p>
   </header>
 
@@ -54,7 +61,7 @@
           <input type="date" id="hiddenDatePicker" class="date-picker-hidden" aria-label="Calendário de data de nascimento" tabindex="-1">
         </fieldset>
 
-        <!-- 4. E-mail e Confirmação de E-mail -->
+        <!-- 5. E-mail e Confirmação de E-mail -->
         <div class="form-group">
           <label for="email">E-mail</label>
           <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
