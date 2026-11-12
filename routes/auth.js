@@ -154,7 +154,7 @@ router.post('/cadastro', async (req, res) => {
     ? req.body.genero
     : (typeof req.body?.sexo === 'string' ? req.body.sexo : '');
   const generoNormalizado = normalizarGenero(genero);
-  const generosPermitidos = new Set(['feminino', 'masculino', 'naobinario', 'prefironaoinformar']);
+  const generosPermitidos = new Set(['feminino', 'masculino', 'prefironaoinformar']);
 
   if (!generoNormalizado || !generosPermitidos.has(generoNormalizado)) {
     return res.status(400).json({ sucesso: false, mensagem: 'Selecione um gênero válido.' });

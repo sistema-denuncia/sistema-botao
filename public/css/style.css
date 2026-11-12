@@ -179,11 +179,11 @@ body {
   color: #FFFFFF;
 }
 
-.login-brand video {
+/* .login-brand video {
   width: 48px;
   height: 48px;
   object-fit: contain;
-}
+} */
 
 .login-brand span:first-child {
   font-size: 1.4em;
@@ -350,7 +350,8 @@ body {
   font-size: 0.9rem;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--border-gray);
@@ -358,7 +359,8 @@ body {
   box-sizing: border-box;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: var(--primary-red);
   box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2);
