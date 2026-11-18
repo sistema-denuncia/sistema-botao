@@ -26,10 +26,12 @@ mostra o endereço correto no terminal. Para escolher uma porta específica,
 defina `PORT` no `.env`; nesse caso, o servidor informa um erro se ela já
 estiver em uso.
 
-O cadastro grava nome, CPF, data de nascimento e e-mail na tabela `usuarios`.
-A senha é armazenada com hash scrypt. O login cria uma sessão assinada em
-cookie HttpOnly; o acionamento usa o ID do usuário autenticado, não um
-identificador gerado no navegador.
+O cadastro grava nome, CPF, gênero, data de nascimento e e-mail na tabela
+`usuarios`. A senha é armazenada com hash scrypt. O gênero informado também é
+incluído nos dados do solicitante exibidos ao sistema policial quando uma
+emergência é acionada. O login cria uma sessão assinada em cookie HttpOnly; o
+acionamento usa o ID do usuário autenticado, não um identificador gerado no
+navegador.
 O nome deve conter pelo menos nome e sobrenome, usando letras e separadores
 comuns, e não pode conter palavrões ou ofensas conhecidas.
 
